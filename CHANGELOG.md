@@ -24,7 +24,7 @@
 | `4e09a5f` | `CHANGELOG.md` 扩写：合并 `main` 提交索引与 S5/S3 单页制品主题追溯、维护说明。 |
 | `ffd06b5` | README 主标题由「Residency 倒计时」改为「**倒计时**」。 |
 | `2d2ff56` | README 下载步骤中补充 **Raw 或 直接点击下载**（为后续长版内网/本地下载两路径说明的衔接）。 |
-| `c752108` | README：**内网** NAS（`http://10.10.10.4:5000/`）、先接 WiFi 再访问；**本地下载** 主路径 `Download raw file`、**Raw 备用**、Primer **下载**图标示意；**部署与参考** 链至 1Panel 博客；与下文本节同步。 |
+| `d1e5fd5` | README：**内网** NAS（`http://10.10.10.4:5000/`）、先接 WiFi 再访问；**本地下载** 主路径 `Download raw file`、**Raw 备用**、Primer **下载**图标示意；**部署与参考** 链至 1Panel 博客；与下文本节同步。 |
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
