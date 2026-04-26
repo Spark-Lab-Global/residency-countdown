@@ -27,8 +27,8 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 - **地址**：<http://10.10.10.4:5000/>（仅内网可访问，未连内网时无法打开属正常现象）  
 - **怎么用**（按顺序即可）：
-  1. **先连上内网**（例如连上实验室/办公室的 **WiFi**，或已接入同网段的有线网络）。  
-  2. 在上述内网环境下，用浏览器打开上面地址，即可使用；无需从 GitHub 再下载一次。
+  1. **先连上内网**（连上 Spark Lab 或 Spark Lab-5G **WiFi**，或已接入同网段的有线网络）。  
+  2. 在上述内网环境下，用浏览器打开上面地址，即可使用；无需从 GitHub 下载。
 
 若你不在该网络里（如在家、手机流量），会访问不到此地址，请用下方「本地下载」从仓库取 `S5-Residency-Countdown.html` 自行打开。NAS 的 IP 或端口若将来有调整，以维护者通知为准。
 
@@ -39,7 +39,7 @@ Spark Lab Residency 自用 · 全屏倒计时
 适用场景：不在内网、或想拿一份**本地副本**随开随用。  
 **默认操作**：先从 GitHub 把 **`S5-Residency-Countdown.html`** 存到本机，再在资源管理器里**双击**该文件，或用浏览器的「打开文件 / Open File」从磁盘选择它（和打开别的 `.html` 一样）。
 
-> 点进主文件在 GitHub 上的页面：  
+> 点进主文件在仓库上的页面：  
 > **[S5-Residency-Countdown.html（`main` 分支）](https://github.com/Spark-Lab-Global/residency-countdown/blob/main/S5-Residency-Countdown.html)**（也可从仓库 [根目录](https://github.com/Spark-Lab-Global/residency-countdown) 点进该文件。）
 
 在文件内容**上方**的 GitHub 工具条里，你可以用下面**两种方式**之一，不必都做。
