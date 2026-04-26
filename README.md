@@ -2,7 +2,7 @@
 
 # Residency 倒计时
 
-Spark Lab 内用 · 全屏倒计时  
+Spark Lab Residency 自用 · 全屏倒计时  
 单文件，打开即用
 
 </div>
