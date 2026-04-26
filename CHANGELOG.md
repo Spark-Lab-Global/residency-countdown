@@ -30,7 +30,7 @@
 | `eb2e181` | README：**本地下载** 再精简，**Download raw file** 与图标配对说明收入**块引用**；**Raw 备用** 一句。 |
 | `vercel` | 根目录 **`vercel.json`** 仅 **`/`** → **`S5-Residency-Countdown.html`**；README「部署与参考」与上文「仓库与元文件」一节、1Panel/NAS 并列、**不** 另建 `index.html`、**不** 用 `/(.*)` 全站劫持（提交见 `main` 上 *feat: …Vercel*）。 |
 | `061cebc` | README：**网络使用**（原「内网使用」）：表列 **内网 NAS 优先**、**公网·Vercel（`residency-countdown.vercel.app`）备选**，并注明免费档配额与公网体验；顶栏「内网」改为「**网络**」。 |
-| `contribs` | README：**联系与审核**（Jah-yee / WorldSansha·三傻）、**维护者** 与 [contrib.rocks 本库图](https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors)；提交见 `main` 上 *…联系/维护者…* 且含 **Co-authored-by** 三傻（NAS）。 |
+| `contribs` | README：**联系与审核**（Jah-yee / WorldSansha·三傻）、**维护者** 链至 [GitHub Contributors](https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors)（后改为**不**再嵌第三方头像图，避免缓存与重写历史后不一致）。 |
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
@@ -73,7 +73,7 @@
 - **根目录**仅保留 **S5** 主 HTML；**`archive/`** 存 **S3** 等旧版，并附 **简短 README**。  
 - **`README` / `docs/github-setup` / `.gitignore`** 与组织私有库 **`residency-countdown`** 的说明、推送速查。  
 - **徽标**使用 **Shields.io**，**Awesome** 为视觉风格，**不表示**入选外部 Awesome 列表。  
-- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**网络使用** 中 **内网 NAS** 优先，**Vercel 公网** 为备选；**联系与审核** 写明 [Jah-yee](https://github.com/Jah-yee)、[WorldSansha / 三傻](https://github.com/WorldSansha)；文末 **维护者** 为 [本仓库](https://github.com/Spark-Lab-Global/residency-countdown) 的 contrib.rocks 图；**本地下载** 与 **技术说明** 下 **1Panel**、**Vercel** 根配置 等同前。
+- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**网络使用** 中 **内网 NAS** 优先，**Vercel 公网** 为备选；**联系与审核** 写明 [Jah-yee](https://github.com/Jah-yee)、[WorldSansha / 三傻](https://github.com/WorldSansha)；文末 **维护者** 以 **GitHub 官方** Contributors 为准、**不** 再嵌第三方头像墙（避免缓存/私有库**与**当前 `main` 不一致）；**本地下载** 与 **1Panel**、**Vercel** 等同前。
 
 ### 6. 有意未纳入或不在此仓库的内容
 
