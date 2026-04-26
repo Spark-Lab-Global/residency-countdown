@@ -24,6 +24,7 @@ Spark Lab Residency 自用 · 全屏倒计时
 ## 网络使用
 
 在浏览器中打开全屏页即可（与主文件 `S5-Residency-Countdown.html` 一致）。**优先**用下表 **1**；**不在内网**时，公网入口见下表 **2**（或备选 **3**），或最下方「本地下载」到本地。
+在浏览器中打开全屏页即可（与主文件 `S5-Residency-Countdown.html` 一致）。**优先**用下表 **1**；**不在内网**时，公网入口见下表 **2** 与段后**国内镜像**二选一，或最下方「本地下载」到本地。
 
 | # | 方式 | 地址与说明 |
 |---|------|------------|
@@ -35,6 +36,12 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 - **日常国内直连**：优先使用 <https://residency-countdown.rth1.xyz/>，无网络环境限制，访问更稳定。
 - **备选/有 VPN 环境**：当主公网链接异常，或本身处于境外网络/挂 VPN 时，可使用备用的 Vercel 链接 <https://residency-countdown.vercel.app/>。
+| 2 | **公网·Vercel** | <https://residency-countdown.vercel.app/>：仓库在 **Vercel** 上部署；**能稳定访问** Vercel 时（常需**境外网络或挂 VPN**）可直接点链接打开。CDN 在**国内未加速**，可能偏慢或偶发卡顿，另有免费档用量等限制；页面里 **Google Fonts** 等走公网拉取。更稳可仍用 **1** 或**本地下载**本地打开。 |
+
+**公网在国内怎么选**（与上表 2 同一套单页，只是访问路径不同）：
+
+- **有 VPN 或能正常打开 Vercel 官网**时：优先用 <https://residency-countdown.vercel.app/> 即可。  
+- **没挂 VPN**、在**国内**，或 **Vercel 页面打不开/很慢**时：可点 <https://tomato193.rth1.xyz/> —— 经 [**热铁盒网页托管**](https://host.retiehe.com/) 在国内环境构建的镜像，**不依赖** Vercel 境外 CDN，一般更适合当前网络。  
 
 内网 **IP/端口** 若调整，以维护者通知为准；Vercel 的用量以 [Vercel](https://vercel.com) 为准；国内镜像以托管与 DNS 实际解析为准。
 
