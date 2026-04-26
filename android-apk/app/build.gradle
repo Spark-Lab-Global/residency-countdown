@@ -1,0 +1,54 @@
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
+
+
+android {
+    namespace 'com.sparklab.countdown'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.sparklab.countdown"
+        minSdk 21
+        targetSdk 34
+        versionCode 4
+        versionName "5.3"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            // Sign with debug key — fine for TV sideloading
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    // Strip unused ABIs to minimize APK size
+    packagingOptions {
+        resources {
+            excludes += [
+                'META-INF/DEPENDENCIES',
+                'META-INF/LICENSE',
+                'META-INF/NOTICE',
+                'kotlin/**',
+                '*.kotlin_module',
+            ]
+        }
+    }
+}
+
+dependencies {
+    // No appcompat — plain Activity is enough
+}

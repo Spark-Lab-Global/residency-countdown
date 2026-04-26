@@ -1,0 +1,3 @@
+-keep class com.sparklab.countdown.** { *; }
+-keepclassmembers class * extends android.webkit.WebViewClient { *; }
+-dontwarn android.webkit.**

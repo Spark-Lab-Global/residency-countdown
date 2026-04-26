@@ -34,6 +34,16 @@
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
+### 2026-04-27 · Android APK 收编与运行时兼容整理（未重新出包）
+
+- 将远端 **`android-apk`** 分支的 Android TV `WebView` 包装工程收编进主仓库子目录 **`android-apk/`**，不取代根目录单文件网页主线。  
+- 明确 **唯一事实源** 为根目录 **`S5-Residency-Countdown.html`** 与 **`fonts/`**；Android 工程不再长期维护独立 HTML 分叉。  
+- Android 构建脚本改为在构建前同步根目录主 HTML 与字体资源进 assets，并持久化 Docker 内的 **`/root/.android`**，以保持 debug 签名可升级。  
+- APK 入口改为直接加载 **`S5-Residency-Countdown.html`**，删除旧的 `assets/index.html` 分叉路线。  
+- 主线网页新增 **Google Fonts 优先、本地字体 fallback**；并为 **21:00 仪式** 与 **整点特效** 增加一次窗口只触发一次的保护。  
+- 针对 Android TV / WebView 的时间兼容性，保留 **`Intl` / `toLocaleString`** 主路径，并为 **主倒计时** 与 **Ship it Monday** 增加固定 **UTC+8** fallback；APK 侧另提供原生毫秒时间桥接作为当前时间兜底。  
+- 当前仓库里的 Android 工程与文档已经整理好，但**新的 APK 尚未在有 Docker / Android SDK 的环境里重新分包并实机验证**；电视侧 **Ship it Monday** 与**主倒计时**时间显示问题，仍以重新出包后的设备测试结果为准。
+
 ---
 
 ## 二、单页制品追溯（S5 为主，兼及 S3）

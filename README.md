@@ -10,13 +10,14 @@ Spark Lab Residency 自用 · 全屏倒计时
 <p align="center">
   <a href="https://github.com/Spark-Lab-Global"><img src="https://img.shields.io/badge/Spark%20Lab-Global-111111?style=flat-square&logo=github&labelColor=222" alt="Spark Lab Global" /></a>
   <img src="https://img.shields.io/badge/HTML5-single%20file-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" />
-  <img src="https://img.shields.io/badge/build-none-555555?style=flat-square" alt="No build" />
+  <img src="https://img.shields.io/badge/web-no%20build-555555?style=flat-square" alt="Web no build" />
+  <img src="https://img.shields.io/badge/apk-wrapper%20integrated-1f6feb?style=flat-square" alt="APK wrapper integrated" />
   <img src="https://img.shields.io/badge/Awesome-yes-ff69b4?style=flat-square&logo=awesomelists&logoColor=white" alt="Awesome" />
   <img src="https://img.shields.io/badge/repo-private-6e40c9?style=flat-square&logo=github" alt="Private" />
 </p>
 
 <p align="center">
-  <a href="#网络使用">网络</a> · <a href="#本地下载">本地下载</a> · <a href="#技术说明">技术</a> · <a href="#联系与审核">联系</a> · <a href="#修改规范">规范</a> · <a href="#维护者">维护者</a> · <a href="CHANGELOG.md">更新记录</a>
+  <a href="#网络使用">网络</a> · <a href="#本地下载">本地下载</a> · <a href="#android-apk">Android APK</a> · <a href="#技术说明">技术</a> · <a href="#联系与审核">联系</a> · <a href="#修改规范">规范</a> · <a href="#维护者">维护者</a> · <a href="CHANGELOG.md">更新记录</a>
 </p>
 
 ---
@@ -66,11 +67,50 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 ---
 
+## Android APK
+
+适用场景：把当前倒计时页作为 **Android TV / 电视盒子 APK** 运行，例如小米电视等带安卓系统的设备。
+
+> 当前说明：仓库里的 **`android-apk/` 工程已经整理好**，但**新的 APK 还没有在有 Docker / Android SDK 的环境里重新分包**。  
+> 因此，电视上实际安装运行的 APK 仍应视为**上一个构建版本**：它**尚未正式验证并支持当前主线 HTML 的最新时间 fallback 处理**；在电视上，**`Ship it Monday`** 与**主倒计时**仍可能出现时间显示异常。  
+> 后续需要在**有 Docker 的环境**里重新构建 APK，再回到电视设备验证并修正。
+
+- Android 工程已收进仓库子目录 **[`android-apk/`](./android-apk/README.md)**，它是**封装层**，不是第二套产品实现。  
+- **唯一事实源**仍然是根目录 **`S5-Residency-Countdown.html`** 与 **`fonts/`**；APK 构建前会先把它们同步进 Android assets。  
+- 这样后续改网页主文件时，APK 不需要再手工维护另一份漂移的 HTML 副本。
+
+### 构建方式
+
+在仓库根目录执行：
+
+```bash
+./android-apk/build.sh
+```
+
+说明：
+
+- 该脚本会先同步最新的 **`S5-Residency-Countdown.html`** 与 **`fonts/`**。  
+- 再通过 **Docker** 中的 Android SDK / Gradle 环境构建 release APK。  
+- 成品默认复制到桌面，便于再拷到 U 盘或直接分发到电视设备。
+- **当前仓库尚未在本机完成这一步**；这里只保留工程与脚本，等待后续在可构建环境中重新出包。
+
+### 运行时说明
+
+- APK 入口是一个 **全屏 WebView**，加载同步进 assets 的 **`S5-Residency-Countdown.html`**。  
+- 字体策略与网页主线保持一致：**优先 Google Fonts，失败/离线时 fallback 到本地字体**。  
+- 针对 Android TV / WebView 的时间兼容性，页面保留 **`Intl` / `toLocaleString` 主路径**，并在异常时退回固定 **UTC+8** 推导；APK 还额外提供原生毫秒时间桥接，优先给主倒计时与 **Ship it Monday** 使用。
+- 以上兼容性逻辑已经整理进工程与资产目录，但**是否真的修复电视上的时间问题，要以重新构建后的 APK 实机验证为准**。
+
+更具体的 Android 维护说明见 **[`android-apk/README.md`](./android-apk/README.md)**。
+
+---
+
 ## 技术说明
 
-- **单文件**：HTML 内已含样式与脚本，无需构建。  
-- **字体**：使用 Google Fonts，首次打开需能访问外网。  
-- **时间与逻辑**：均写在该文件中；改期、改起止，只动这一处里配置区与相关注释所指的代码。
+- **网页主线**：根目录 **`S5-Residency-Countdown.html`** 为主发布文件；HTML 内含样式与脚本，无需网页构建。  
+- **字体**：默认优先 Google Fonts；加载失败、离线或断网时 fallback 到本地 **`fonts/google-fonts-local.css`** 与同目录 woff2。  
+- **时间与逻辑**：核心仍写在该文件中；针对 Android TV / WebView，关键时间推导保留 fallback，尽量不因运行时差异而失效。  
+- **APK 封装**：`android-apk/` 只负责把当前主线网页封装为 Android APK，不应演化成第二套独立实现。
 
 ### 部署与参考（Reference）
 
@@ -94,6 +134,7 @@ Spark Lab Residency 自用 · 全屏倒计时
 ## 修改规范
 
 - 主发布：始终使用根目录 **`S5-Residency-Countdown.html`**。  
+- Android 封装：放在 **`android-apk/`**；若改 APK 行为，优先判断是否应先改根目录 **S5** 与 **fonts** 这两个事实源。  
 - 旧版：放在 **`archive/`**，不要与当前 S5 混用。  
 - 远程：<https://github.com/Spark-Lab-Global/residency-countdown> · 首次推送等见 **`docs/github-setup.md`**（仅维护者）。
 
