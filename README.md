@@ -73,7 +73,7 @@ Spark Lab Residency 自用 · 全屏倒计时
 ### 部署与参考（Reference）
 
 - **内网 NAS**：与 **1Panel** 等从 GitHub 拉取/部署有关的做法，见博客  
-  **[1Panel 自动同步 GitHub 仓库](https://blog.liushen.fun/posts/327826ac/)**（筑站与自动化思路，可按需对照你们 NAS 上的实际设置）。  
+  **[1Panel 自动同步 GitHub 仓库](https://blog.liushen.fun/posts/327826ac/)**。  
 - **Vercel**：根目录的 **`vercel.json`** 仅把路径 **`/`** 重写到 **`S5-Residency-Countdown.html`**。这样**不增加** `index.html` 副本、主文件**仍只维护 S5 这一份**；`https://你的域名/S5-Residency-Countdown.html` 也仍可直链。若同站点将来要加其它资源路径，**不要**把全站 `/(.*)` 都重写到 S5，以免误伤。
 
 ---
