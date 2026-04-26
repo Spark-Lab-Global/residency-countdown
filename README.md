@@ -17,7 +17,7 @@ Spark Lab Residency 自用 · 全屏倒计时
 </p>
 
 <p align="center">
-  <a href="#网络使用">网络</a> · <a href="#本地下载">本地下载</a> · <a href="#android-apk">Android APK</a> · <a href="#技术说明">技术</a> · <a href="#联系与审核">联系</a> · <a href="#修改规范">规范</a> · <a href="#维护者">维护者</a> · <a href="CHANGELOG.md">更新记录</a>
+  <a href="#网络使用">网络</a> · <a href="#本地下载">本地下载</a> · <a href="#android-apk">Android APK</a> · <a href="#技术说明">技术</a> · <a href="#联系与审核">联系</a> · <a href="#修改规范">规范</a> · <a href="CHANGELOG.md">更新记录</a>
 </p>
 
 ---
@@ -139,11 +139,3 @@ Spark Lab Residency 自用 · 全屏倒计时
 - 远程：<https://github.com/Spark-Lab-Global/residency-countdown> · 首次推送等见 **`docs/github-setup.md`**（仅维护者）。
 
 > 本仓库不单独附 License，内部使用。变更说明见 [**CHANGELOG.md**](CHANGELOG.md)。
-
----
-
-## 维护者
-
-<a href="https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Spark-Lab-Global/residency-countdown" alt="本仓库贡献者" />
-</a>
