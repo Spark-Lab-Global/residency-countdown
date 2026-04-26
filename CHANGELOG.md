@@ -12,7 +12,8 @@
 - 简化 README，压缩推送速查。  
 - 配置远程 **`origin`** → `https://github.com/Spark-Lab-Global/residency-countdown.git`；以 GitHub `noreply` 邮箱重写作业历史后完成首次推送。  
 - GitHub 上小改 README 文案。  
-- README 顶部标题区居中，并持续微调版式与导航。
+- README 顶部标题区居中，并持续微调版式与导航。  
+- README 增加 Shields 徽标行（**Spark Lab · Global**、**HTML5**、**build none**、**Awesome**、**private**）。
 
 ### 历史制品（S5 单页，摘要 · 无单独版本号）
 

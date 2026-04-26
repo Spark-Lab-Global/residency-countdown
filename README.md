@@ -8,6 +8,14 @@ Spark Lab Residency 自用 · 全屏倒计时
 </div>
 
 <p align="center">
+  <a href="https://github.com/Spark-Lab-Global"><img src="https://img.shields.io/badge/Spark%20Lab-Global-111111?style=flat-square&logo=github&labelColor=222" alt="Spark Lab Global" /></a>
+  <img src="https://img.shields.io/badge/HTML5-single%20file-E34F26?style=flat-square&logo=html5&logoColor=white" alt="HTML5" />
+  <img src="https://img.shields.io/badge/build-none-555555?style=flat-square" alt="No build" />
+  <img src="https://img.shields.io/badge/Awesome-yes-ff69b4?style=flat-square&logo=awesomelists&logoColor=white" alt="Awesome" />
+  <img src="https://img.shields.io/badge/repo-private-6e40c9?style=flat-square&logo=github" alt="Private" />
+</p>
+
+<p align="center">
   <a href="#下载">下载</a> · <a href="#技术说明">技术</a> · <a href="#修改规范">规范</a> · <a href="CHANGELOG.md">更新记录</a>
 </p>
 
