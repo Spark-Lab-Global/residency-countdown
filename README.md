@@ -102,6 +102,6 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 ## 维护者
 
-贡献者名单以 **GitHub 官方** [Insights → Contributors](https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors) 为准（只统计当前 `main` 上真实提交，会随新提交更新）。
-
-此前嵌入的第三方头像图（如 contrib.rocks）在**历史重写/私有库**后容易**仍显示旧贡献者**（甚至含已不存在的假作者），与当前仓库**不一致**；已撤下，请直接看上方链。若你仍看到旧头像，清浏览器缓存或换无痕窗口后打开该页。
+<a href="https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Spark-Lab-Global/residency-countdown" alt="本仓库贡献者" />
+</a>
