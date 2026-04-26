@@ -27,7 +27,7 @@
 | `d1e5fd5` | README：**内网** NAS（`http://10.10.10.4:5000/`）、先接 WiFi 再访问；**本地下载** 主路径 `Download raw file`、**Raw 备用**、Primer **下载**图标示意；**部署与参考** 链至 1Panel 博客；与下文本节同步。 |
 | `2883ed5` | 仅文档：上一行短 hash 在 `commit --amend` 后已在表中更正为 `d1e5fd5`。 |
 | `2155911` | README：内网写明 **Spark Lab / Spark Lab-5G** WiFi；主文件链改为「在**仓库**上的页面」等。 |
-| `0f655ff` | README：**本地下载** 再精简，**Download raw file** 与图标配对说明收入**块引用**；**Raw 备用** 一句。 |
+| `eb2e181` | README：**本地下载** 再精简，**Download raw file** 与图标配对说明收入**块引用**；**Raw 备用** 一句。 |
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
