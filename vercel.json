@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/S5-Residency-Countdown.html" }
+  ]
+}
