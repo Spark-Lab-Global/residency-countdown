@@ -25,6 +25,9 @@
 | `ffd06b5` | README 主标题由「Residency 倒计时」改为「**倒计时**」。 |
 | `2d2ff56` | README 下载步骤中补充 **Raw 或 直接点击下载**（为后续长版内网/本地下载两路径说明的衔接）。 |
 | `d1e5fd5` | README：**内网** NAS（`http://10.10.10.4:5000/`）、先接 WiFi 再访问；**本地下载** 主路径 `Download raw file`、**Raw 备用**、Primer **下载**图标示意；**部署与参考** 链至 1Panel 博客；与下文本节同步。 |
+| `2883ed5` | 仅文档：上一行短 hash 在 `commit --amend` 后已在表中更正为 `d1e5fd5`。 |
+| `2155911` | README：内网写明 **Spark Lab / Spark Lab-5G** WiFi；主文件链改为「在**仓库**上的页面」等。 |
+| `0f655ff` | README：**本地下载** 再精简，**Download raw file** 与图标配对说明收入**块引用**；**Raw 备用** 一句。 |
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
@@ -67,7 +70,7 @@
 - **根目录**仅保留 **S5** 主 HTML；**`archive/`** 存 **S3** 等旧版，并附 **简短 README**。  
 - **`README` / `docs/github-setup` / `.gitignore`** 与组织私有库 **`residency-countdown`** 的说明、推送速查。  
 - **徽标**使用 **Shields.io**，**Awesome** 为视觉风格，**不表示**入选外部 Awesome 列表。  
-- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**内网**由 NAS/HTTP 提供**与 `S5-Residency-Countdown.html` 一致**的访问（`10.10.10.4:5000` 以维护者实际为准），**本地下载** 明确「先下后开」的默认流程、GitHub 文件页**下载优先 / Raw 备用**、外链 **Primer Octicons** 作视觉参照；**技术说明** 下 **部署与参考** 链至 [LiuShen：1Panel 自动同步 GitHub 仓库](https://blog.liushen.fun/posts/327826ac/) 供 NAS 侧同步/面板配置对照。
+- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**内网**由 NAS/HTTP 提供**与 `S5-Residency-Countdown.html` 一致**的访问（`10.10.10.4:5000` 以维护者实际为准），**本地下载** 为「先下后开」、GitHub 上 **下载 / `Download raw file`** 与 **Raw 备用**；下载与图标对应关系在 **引用块** 中说明，外链 **Primer** 作示意；**技术说明** 下 **部署与参考** 链至 [LiuShen：1Panel 自动同步 GitHub 仓库](https://blog.liushen.fun/posts/327826ac/) 供 NAS 侧对照。
 
 ### 6. 有意未纳入或不在此仓库的内容
 

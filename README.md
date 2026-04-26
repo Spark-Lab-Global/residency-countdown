@@ -42,29 +42,21 @@ Spark Lab Residency 自用 · 全屏倒计时
 > 点进主文件在仓库上的页面：  
 > **[S5-Residency-Countdown.html（`main` 分支）](https://github.com/Spark-Lab-Global/residency-countdown/blob/main/S5-Residency-Countdown.html)**（也可从仓库 [根目录](https://github.com/Spark-Lab-Global/residency-countdown) 点进该文件。）
 
-在文件内容**上方**的 GitHub 工具条里，你可以用下面**两种方式**之一，不必都做。
+在文件**上方**的 GitHub 工具条，**任选一种**方式即可。
 
-### 1. 推荐：直接下载（最省事）
+### 1. 推荐：直接下载
 
-- 在工具条**右侧**找 **「下载 / Download」** 或 **「⋯ / More file actions」** 菜单，选择 **`Download raw file`**。  
-- 各版本界面会略有不同：有时是单独的下载图标，有时在 `⋯` 里；**目标都是把原始 `.html` 原样存到本机。**
+在**右侧**点 **「下载 / Download」** 或 **⋯** → **`Download raw file`**，把 `S5-Residency-Countdown.html` 存到本机，然后在资源管理器里**双击**打开；或用浏览器从磁盘**打开**该文件。
 
-为便于在页面上「对上号」，**下载**在 GitHub 上常用下面这类「向下箭头/保存」图标（仅代表样式，不保证与线上一比一像素相同）：
+> 在页面上**对号入座**时，**「向下箭头/保存」** 与 **`Download raw file`** 常指同一类入口，只是 GitHub 版本可能显示成独立按钮或收在 `⋯` 里。  
+>  
+> <p align="center">
+>   <img src="https://cdn.jsdelivr.net/npm/@primer/octicons@19.8.0/build/svg/download-24.svg" width="32" height="32" alt="下载（示意，与 Download raw file 对应）" />
+> </p>
 
-<p align="center">
-  <img src="https://cdn.jsdelivr.net/npm/@primer/octicons@19.8.0/build/svg/download-24.svg" width="32" height="32" alt="下载图标（箭头像指向托盘，示意）" />
-  <br />
-  <sub>示意：与文件页上「保存 / Download raw file」一类的操作对应</sub>
-</p>
+### 2. 备用：Raw
 
-保存完成后，在本地**双击**该 HTML 即可全屏使用。
-
-### 2. 备用：先 Raw 再另存
-
-若上面入口找不到、或你更习惯**纯文本**那一页：
-
-1. 在同一工具条中点击 **「Raw」**，进入**仅原始内容**的页面；  
-2. 用 **Ctrl+S / ⌘+S 另存为** 到本地，或在浏览器中直接打开，再视情况保存。
+找不到上面入口时，点 **「Raw」**，**另存为**（Ctrl+S / ⌘+S）为 `.html` 即可。
 
 ---
 
