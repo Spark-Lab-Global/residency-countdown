@@ -52,17 +52,15 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 ### 1. 推荐：直接下载
 
-在**右侧**点 **「下载 / Download」** 或 **⋯** → **`Download raw file`**，把 `S5-Residency-Countdown.html` 存到本机，然后在资源管理器里**双击**打开；或用浏览器从磁盘**打开**该文件。
+在**右上角**点 **「下载 / Download」** 或 **⋯** → **`Download raw file`**，把 `S5-Residency-Countdown.html` 存到本机，然后在资源管理器里**双击**打开；或用浏览器从磁盘**打开**该文件。
 
-> 在页面上**对号入座**时，**「向下箭头/保存」** 与 **`Download raw file`** 常指同一类入口，只是 GitHub 版本可能显示成独立按钮或收在 `⋯` 里。  
->  
 > <p align="center">
 >   <img src="https://cdn.jsdelivr.net/npm/@primer/octicons@19.8.0/build/svg/download-24.svg" width="32" height="32" alt="下载（示意，与 Download raw file 对应）" />
 > </p>
 
 ### 2. 备用：Raw
 
-找不到上面入口时，点 **「Raw」**，**另存为**（Ctrl+S / ⌘+S）为 `.html` 即可。
+找不到上面入口时，点右上角 **「Raw」**，**另存为**（Ctrl+S / ⌘+S）为 `.html` 即可。
 
 ---
 
