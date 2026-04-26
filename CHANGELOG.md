@@ -29,6 +29,7 @@
 | `2155911` | README：内网写明 **Spark Lab / Spark Lab-5G** WiFi；主文件链改为「在**仓库**上的页面」等。 |
 | `eb2e181` | README：**本地下载** 再精简，**Download raw file** 与图标配对说明收入**块引用**；**Raw 备用** 一句。 |
 | `vercel` | 根目录 **`vercel.json`** 仅 **`/`** → **`S5-Residency-Countdown.html`**；README「部署与参考」与上文「仓库与元文件」一节、1Panel/NAS 并列、**不** 另建 `index.html`、**不** 用 `/(.*)` 全站劫持（提交见 `main` 上 *feat: …Vercel*）。 |
+| `network` | README：**网络使用**（原「内网使用」）：表列 **内网 NAS 优先**、**公网·Vercel（`residency-countdown.vercel.app`）备选**，并注明免费档配额与公网体验；顶栏「内网」改为「**网络**」。 |
 
 **与远端推送相关**（未单独成 commit 的操作）：为符合 GitHub **不暴露私有邮箱** 策略，曾用 **`166608075+Jah-yee@users.noreply.github.com`** 重写作业者邮箱后执行 **`git push`**；本地为仓库配置 **`user.email`** 为上述 noreply。
 
@@ -71,7 +72,7 @@
 - **根目录**仅保留 **S5** 主 HTML；**`archive/`** 存 **S3** 等旧版，并附 **简短 README**。  
 - **`README` / `docs/github-setup` / `.gitignore`** 与组织私有库 **`residency-countdown`** 的说明、推送速查。  
 - **徽标**使用 **Shields.io**，**Awesome** 为视觉风格，**不表示**入选外部 Awesome 列表。  
-- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**内网**由 NAS/HTTP 提供**与 `S5-Residency-Countdown.html` 一致**的访问（`10.10.10.4:5000` 以维护者实际为准），**本地下载** 为「先下后开」、GitHub 上 **下载 / `Download raw file`** 与 **Raw 备用**；下载与图标对应关系在 **引用块** 中说明，外链 **Primer** 作示意；**技术说明** 下 **部署与参考** 含 **1Panel 博客**、**Vercel**（根 **`vercel.json`** 仅把 **`/`** 重写到 S5，**不** 维护第二份 `index.html`），供 NAS 与公网部署对照。
+- **README（`main` 持续维护，未改初衷）**：仍以 **单文件、无构建、内部自用** 为中心；**网络使用** 中 **内网 NAS** 优先，**Vercel 公网** 为备选（与 `vercel.json`、`residency-countdown.vercel.app` 一致）；**本地下载** 为「先下后开」、GitHub **下载 / `Download raw file`** 与 **Raw 备用**；下载与图标在 **引用块** 中说明；**技术说明** 下 **部署与参考** 含 **1Panel**、**Vercel 根配置**（不把 **`/`** 重写成第二份 `index.html`）。
 
 ### 6. 有意未纳入或不在此仓库的内容
 
