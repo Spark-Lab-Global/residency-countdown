@@ -1,23 +1,27 @@
 # Residency 倒计时
 
-Spark Lab 自用的**全屏 residency 周期倒计时**静态页面。在浏览器中打开主 HTML 即可使用，不依赖构建步骤或后端服务。
+Spark Lab 自用全屏倒计时 · 单文件即开即用
 
-## 主文件
+---
 
-- **`S5-Residency-Countdown.html`** — 当前在用的 S5 期次（主倒计时、上海时区、Ship it 周节奏等逻辑均在此文件内，含样式与脚本）。
+## 下载
 
-用本地文件方式打开，或通过任意静态资源托管提供访问。
+在 GitHub 打开根目录里的 **`S5-Residency-Countdown.html`**，点右上角 **Raw**，用浏览器打开或另存为本地 HTML 使用即可。
 
-## 归档
-
-- **`archive/`** — 往期的 S3 等其它 HTML 副本，仅作备份与对照，不保证与当前起止或文案一致。日常请使用根目录的 S5 文件。详见 `archive/README.md`。
+---
 
 ## 技术说明
 
-- 单页 HTML：内联 CSS/JS，Google Fonts 通过 `https` 拉取；无法访问外网时字体会回退为系统默认，页面仍可工作。
-- 主倒计时、边界闪烁、白/黑底逻辑均在脚本内，修改时间仅改 S5 内 `CONFIG` 与注释说明的 ISO/回退行即可。
-- 本仓库**不含许可证文件**：为组织内部使用；对外分发时由 Spark Lab 另行决定。
+- **单文件**：HTML 内已含样式和脚本，无需构建。  
+- **字体**：用 Google Fonts，首次打开需能访问外网。  
+- **时间与逻辑**：都在该文件里；改期、改起止，只改这一份中的配置与注释所指的代码。
 
-## 与 GitHub 同步
+---
 
-在组织 [Spark-Lab-Global](https://github.com/Spark-Lab-Global) 下可建**私有**仓库，将本目录推送到远端。步骤见 **`docs/github-setup.md`**（需本机已配置 `git` / `gh` 与组织权限）。
+## 修改规范
+
+- 主发布始终是根目录的 **`S5-Residency-Countdown.html`**。  
+- 旧版页面放在 **`archive/`**，勿与当前 S5 混用。  
+- 推送到 [Spark-Lab-Global](https://github.com/Spark-Lab-Global) 私有仓库时，可参阅 **`docs/github-setup.md`**（仅维护者需要）。
+
+本仓库不单独附 License，内部使用。
