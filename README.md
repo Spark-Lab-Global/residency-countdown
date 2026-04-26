@@ -22,6 +22,6 @@ Spark Lab 自用全屏倒计时 · 单文件即开即用
 
 - 主发布始终是根目录的 **`S5-Residency-Countdown.html`**。  
 - 旧版页面放在 **`archive/`**，勿与当前 S5 混用。  
-- 推送到 [Spark-Lab-Global](https://github.com/Spark-Lab-Global) 私有仓库时，可参阅 **`docs/github-setup.md`**（仅维护者需要）。
+- 远程仓库：<https://github.com/Spark-Lab-Global/residency-countdown> · 首次推送等见 **`docs/github-setup.md`**（仅维护者需要）。
 
 本仓库不单独附 License，内部使用。

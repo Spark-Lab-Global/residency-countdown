@@ -1,19 +1,29 @@
 # 推送速查
 
-维护者将本地仓库推到组织下的私有空仓库时可用。
+本仓库标准远端：
 
-**已有仓库、仅推送：**
+**`https://github.com/Spark-Lab-Global/residency-countdown.git`**
+
+已配置时可：
 
 ```bash
-git remote add origin https://github.com/Spark-Lab-Global/仓库名.git
+git push -u origin main
+```
+
+若本地尚未加 `origin`：
+
+```bash
+git remote add origin https://github.com/Spark-Lab-Global/residency-countdown.git
 git branch -M main
 git push -u origin main
 ```
 
-**用 GitHub CLI 在组织下新建私有库并推送（需已 `gh auth login`）：**
+在网页上新建组织仓库：<https://github.com/organizations/Spark-Lab-Global/repositories/new>（选 **Private**；若本地已有 README 等，建空库不要勾选初始文件）。
+
+**GitHub CLI 一次性建库并推（需已 `gh auth login`）：**
 
 ```bash
-gh repo create Spark-Lab-Global/仓库名 --private --source=. --remote=origin --push
+gh repo create Spark-Lab-Global/residency-countdown --private --source=. --remote=origin --push
 ```
 
-在网页上建库：<https://github.com/organizations/Spark-Lab-Global/repositories/new> → 选 **Private**，不要勾选初始化 README，避免与本地冲突。
+（若库已存在，只用上面的 `git push` 即可。）
