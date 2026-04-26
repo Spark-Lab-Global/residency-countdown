@@ -97,6 +97,20 @@ Spark Lab Residency 自用 · 全屏倒计时
 
 ## 维护者
 
+主要维护与协作（**[WorldSansha / 三傻](https://github.com/WorldSansha)** 在下方统计图里未必单独显示头像，故在此固定展示。）：
+
+<p align="center">
+  <a href="https://github.com/Jah-yee" title="主要维护：Jah-yee">
+    <img src="https://avatars.githubusercontent.com/u/166608075?s=64" width="64" height="64" alt="Jah-yee" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://github.com/WorldSansha" title="协作：WorldSansha（三傻），NAS 等">
+    <img src="https://avatars.githubusercontent.com/u/37899975?s=64" width="64" height="64" alt="WorldSansha" />
+  </a>
+</p>
+
+**按提交统计的贡献者**（[完整列表](https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors)）：
+
 <a href="https://github.com/Spark-Lab-Global/residency-countdown/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Spark-Lab-Global/residency-countdown" alt="本仓库贡献者" />
 </a>
