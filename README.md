@@ -1,6 +1,6 @@
 <div align="center">
 
-# Residency 倒计时
+# 倒计时
 
 Spark Lab Residency 自用 · 全屏倒计时  
 单文件，打开即用
