@@ -807,615 +807,295 @@
     <div class="ritual-message" id="ritualMessage">KEEP BUILDING</div>
     
     <script>
-        // 配置：主倒计时墙钟 = 上海（+08:00 固定；上海无夏令时）
-        // 本期 S5 起止均为上海中午 12:00：2026-04-26 12:00 起 → 满 42 天后的同日时刻止（即 2026-06-07 12:00）。边界 ±10s 闪烁、白/黑底、停表，均只读 CONFIG.startDate / endDate，无第二套时间。
-        // 若 ISO 在极古环境中解析失败，则回退为【本机本地日历】同一天的 12:00 与 +42 天（console 警告，行为退化为 S3 式本地锚点）
-        const TZ_SHANGHAI = 'Asia/Shanghai';
+        // === 时间锚点：硬编码 UTC 时间戳，无需任何 ISO 解析或 locale 支持 ===
+        // 2026-04-26 12:00 Shanghai (UTC+8) = 2026-04-26 04:00 UTC
+        const START_TS = 1777176000000;
+        // 2026-06-07 12:00 Shanghai (UTC+8) = 2026-06-07 04:00 UTC
+        const END_TS   = 1780804800000;
         const MS_PER_DAY = 86400000;
 
-        let startDateShanghai = new Date('2026-04-26T12:00:00+08:00');
-        if (Number.isNaN(startDateShanghai.getTime())) {
-            console.warn('[S5] 无法解析起止 ISO，已回退为本地 2026-4-26 12:00 与 +42 天');
-            startDateShanghai = new Date(2026, 3, 26, 12, 0, 0, 0);
-        }
-        const endDateShanghai = new Date(startDateShanghai.getTime() + 42 * MS_PER_DAY);
-
-        const totalDays = (endDateShanghai.getTime() - startDateShanghai.getTime()) / MS_PER_DAY;
-
         const CONFIG = {
-            timeZone: TZ_SHANGHAI,
-            startDate: startDateShanghai,
-            endDate: endDateShanghai,
             sparkWords: ['BUILD', 'CREATE', 'SPARK', 'LEGACY', 'ITERATE', 'SHIP', 'SCALE', 'DREAM'],
-            particleInterval: 8000, // 粒子生成间隔
-            matrixSpeed: 50, // 代码雨速度
-            ritualHour: 21, // 21:00仪式时刻
+            matrixSpeed: 50,
+            ritualHour: 21,
             ritualMessages: [
-                'KEEP BUILDING',
-                'STAY CURIOUS',
-                'TRUST THE PROCESS',
-                'EMBRACE CHAOS',
-                'FIND YOUR SPARK',
-                'BUILD TO THINK',
-                'SHIP FAST',
-                'STAY HUNGRY'
-            ]
+                'KEEP BUILDING', 'STAY CURIOUS', 'TRUST THE PROCESS',
+                'EMBRACE CHAOS', 'FIND YOUR SPARK', 'BUILD TO THINK', 'SHIP FAST', 'STAY HUNGRY'
+            ],
+            particleInterval: 8000
         };
-        
-        let countdownInterval = null;
+
         let countdownFinished = false;
-        
-        
-        
-        // Matrix 代码雨效果
+
+        // === UTC+8 工具函数：纯算术，不依赖 Intl / toLocaleString ===
+        function getShanghaiParts(tsMs) {
+            const s = new Date(tsMs + 8 * 3600000);
+            return {
+                year:    s.getUTCFullYear(),
+                month:   s.getUTCMonth() + 1,
+                day:     s.getUTCDate(),
+                hour:    s.getUTCHours(),
+                minute:  s.getUTCMinutes(),
+                second:  s.getUTCSeconds(),
+                weekday: s.getUTCDay()
+            };
+        }
+
+        function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+        function pad3(n) { const s = '' + n; return s.length >= 3 ? s : ('000' + s).slice(-3); }
+
+        function setEl(id, v) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = v;
+        }
+
+        // === Matrix 代码雨 ===
         function initMatrix() {
             const canvas = document.getElementById('matrix-bg');
             const ctx = canvas.getContext('2d');
-            
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
             const matrix = CONFIG.sparkWords.join('').split('');
             const fontSize = 14;
-            const columns = canvas.width / fontSize;
-            const drops = Array(Math.floor(columns)).fill(1);
-            
-            function draw() {
+            const drops = Array(Math.floor(canvas.width / fontSize)).fill(1);
+            setInterval(function() {
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
                 ctx.fillStyle = 'rgba(255, 103, 55, 0.8)';
                 ctx.font = fontSize + 'px Fira Code';
-                
                 for (let i = 0; i < drops.length; i++) {
-                    const text = matrix[Math.floor(Math.random() * matrix.length)];
-                    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-                    
-                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) {
-                        drops[i] = 0;
-                    }
+                    ctx.fillText(matrix[Math.floor(Math.random() * matrix.length)], i * fontSize, drops[i] * fontSize);
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.985) drops[i] = 0;
                     drops[i]++;
                 }
-            }
-            
-            setInterval(draw, CONFIG.matrixSpeed);
+            }, CONFIG.matrixSpeed);
         }
-        
-        // 音频可视化波形 - 更平滑的心跳效果
+
+        // === 波形 ===
         function updateWaveform() {
             const svg = document.getElementById('waveform-svg');
             const path = document.getElementById('waveform');
             const innerPath = document.getElementById('waveform-inner');
-            const width = svg.clientWidth;
-            const height = svg.clientHeight;
-            const centerX = width / 2;
-            const centerY = height / 2;
+            const width = svg.clientWidth, height = svg.clientHeight;
+            const cx = width / 2, cy = height / 2;
             const radius = Math.min(width, height) * 0.35;
-            
-            const points = 64; // 减少点数，更平滑
-            let pathData = '';
-            let innerPathData = '';
-            
-            // 模拟心跳波形
-            const time = Date.now() * 0.0003; // 更慢的速度
-            
+            const points = 64;
+            let pd = '', ipd = '';
+            const time = Date.now() * 0.0003;
             for (let i = 0; i <= points; i++) {
                 const angle = (i / points) * Math.PI * 2;
-                
-                // 外层波形 - 主心跳
-                let waveHeight = 8;
-                waveHeight += Math.sin(time + i * 0.05) * 4;
-                waveHeight += Math.sin(time * 2 + i * 0.1) * 2;
-                
-                // 偶尔的强心跳
-                if (Math.sin(time * 0.5) > 0.8) {
-                    waveHeight += Math.sin(time * 4 + i * 0.2) * 6;
-                }
-                
-                const r = radius + waveHeight;
-                const x = centerX + Math.cos(angle) * r;
-                const y = centerY + Math.sin(angle) * r;
-                
-                // 内层波形 - 更柔和
-                const innerWaveHeight = waveHeight * 0.5;
-                const innerR = radius - 5 + innerWaveHeight;
-                const innerX = centerX + Math.cos(angle) * innerR;
-                const innerY = centerY + Math.sin(angle) * innerR;
-                
-                if (i === 0) {
-                    pathData += `M ${x} ${y}`;
-                    innerPathData += `M ${innerX} ${innerY}`;
-                } else {
-                    pathData += ` L ${x} ${y}`;
-                    innerPathData += ` L ${innerX} ${innerY}`;
-                }
+                let wh = 8 + Math.sin(time + i * 0.05) * 4 + Math.sin(time * 2 + i * 0.1) * 2;
+                if (Math.sin(time * 0.5) > 0.8) wh += Math.sin(time * 4 + i * 0.2) * 6;
+                const r = radius + wh;
+                const x = cx + Math.cos(angle) * r, y = cy + Math.sin(angle) * r;
+                const ir = radius - 5 + wh * 0.5;
+                const ix = cx + Math.cos(angle) * ir, iy = cy + Math.sin(angle) * ir;
+                pd  += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
+                ipd += (i === 0 ? 'M ' : ' L ') + ix + ' ' + iy;
             }
-            
-            pathData += ' Z';
-            innerPathData += ' Z';
-            path.setAttribute('d', pathData);
-            innerPath.setAttribute('d', innerPathData);
-            
+            path.setAttribute('d', pd + ' Z');
+            innerPath.setAttribute('d', ipd + ' Z');
             requestAnimationFrame(updateWaveform);
         }
-        
-        // 火花粒子生成 - 更缓慢的运动
+
+        // === 粒子 ===
         function createParticle() {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            
-            const centerX = window.innerWidth / 2;
-            const centerY = window.innerHeight / 2;
-            const offsetX = (Math.random() - 0.5) * 300;
-            const offsetY = (Math.random() - 0.5) * 300;
-            
-            particle.style.left = (centerX + offsetX) + 'px';
-            particle.style.top = (centerY + offsetY) + 'px';
-            
-            // 更小的运动范围，更缓慢的飘动
-            const tx = (Math.random() - 0.5) * 200;
-            const ty = -Math.random() * 150 - 50; // 主要向上飘
-            particle.style.setProperty('--tx', tx + 'px');
-            particle.style.setProperty('--ty', ty + 'px');
-            
-            document.getElementById('particles').appendChild(particle);
-            
-            // 动画时间延长
-            setTimeout(() => particle.remove(), 15000);
-        }
-        
-        // 数字变化动画 - 平滑过渡，无闪烁
-        function updateDigit(elementId, newValue, oldValue) {
-            if (newValue !== oldValue) {
-                const element = document.getElementById(elementId);
-                const parent = element.parentElement;
-                
-                // 平滑过渡
-                parent.classList.add('changing');
-                setTimeout(() => {
-                    element.textContent = newValue;
-                    parent.classList.remove('changing');
-                }, 300);
-                
-                
-                // 偶尔生成粒子（频率降低）
-                if (Math.random() > 0.95) {
-                    createParticle();
-                }
-            }
-        }
-        
-        // 打字机效果状态
-        let typewriterState = {
-            currentText: 'Spark it forward',
-            fullText: 'Spark it forward',
-            isDeleting: false,
-            isRotating: false,
-            rotateIndex: 0,
-            typewriterTimeout: null
-        };
-        
-        const rotateWords = ['Stealth', 'Speed', 'Subtraction', 'Synergy'];
-        
-        function updateTypewriterEffect() {
-            const activityElement = document.getElementById('activity');
-            if (!activityElement) return;
-            
-            // 清除之前的定时器
-            if (typewriterState.typewriterTimeout) {
-                clearTimeout(typewriterState.typewriterTimeout);
-            }
-            
-            if (typewriterState.isRotating) {
-                // 轮换显示其他文字
-                if (typewriterState.rotateIndex < rotateWords.length) {
-                    activityElement.textContent = rotateWords[typewriterState.rotateIndex];
-                    typewriterState.rotateIndex++;
-                    
-                    // 每个文字显示1.5秒
-                    typewriterState.typewriterTimeout = setTimeout(() => {
-                        updateTypewriterEffect();
-                    }, 1500);
-                } else {
-                    // 轮换完成，重新开始显示 "Spark it forward"
-                    typewriterState.isRotating = false;
-                    typewriterState.rotateIndex = 0;
-                    typewriterState.isDeleting = false;
-                    updateTypewriterEffect();
-                }
-            } else if (!typewriterState.isDeleting) {
-                // 显示完整文本
-                typewriterState.currentText = typewriterState.fullText;
-                activityElement.textContent = typewriterState.currentText;
-                
-                // 等待2秒后开始删除
-                typewriterState.typewriterTimeout = setTimeout(() => {
-                    typewriterState.isDeleting = true;
-                    updateTypewriterEffect();
-                }, 2000);
-            } else {
-                // 删除字符
-                if (typewriterState.currentText.length > 5) { // "Spark" 是5个字符
-                    typewriterState.currentText = typewriterState.currentText.slice(0, -1);
-                    activityElement.textContent = typewriterState.currentText;
-                    
-                    // 继续删除
-                    typewriterState.typewriterTimeout = setTimeout(() => {
-                        updateTypewriterEffect();
-                    }, 80); // 每80ms删除一个字符
-                } else {
-                    // 删除完成，只保留 "Spark"，开始轮换其他文字
-                    typewriterState.isDeleting = false;
-                    typewriterState.isRotating = true;
-                    typewriterState.rotateIndex = 0;
-                    typewriterState.typewriterTimeout = setTimeout(() => {
-                        updateTypewriterEffect();
-                    }, 1000);
-                }
-            }
-        }
-        
-        // 生命体征模拟
-        function updateVitals() {
-            // 模拟心率
-            const heartRate = 60 + Math.floor(Math.random() * 30);
-            document.getElementById('heartRate').textContent = heartRate;
-            
-            // 模拟活动状态（只包含其他文字，Spark it forward 由打字机效果处理）
-            const activities = ['Spark', 'Stealth', 'Speed', 'Subtraction', 'Synergy'];
-            const activityElement = document.getElementById('activity');
-            
-            // 只有在不显示打字机效果时才显示其他活动状态
-            // 打字机效果由独立的定时器处理，这里不做处理
-            
-            // 模拟提交数 - 添加glitch效果
-            const commitsElement = document.getElementById('commits');
-            const currentCommits = parseInt(commitsElement.textContent, 10) || 0;
-            
-            // 偶尔增加commits
-            if (Math.random() > 0.95) {
-                commitsElement.textContent = currentCommits + 1;
-            }
-            
-            // 随机glitch效果
-            if (Math.random() > 0.8) {
-                commitsElement.classList.add('glitching');
-                setTimeout(() => {
-                    commitsElement.classList.remove('glitching');
-                }, 300);
-            }
-        }
-        
-        /** 上海墙钟的时 / 分 / 秒；Intl 不可用时回退为本机本地时 */
-        function getShanghaiClock(now) {
-            try {
-                const parts = new Intl.DateTimeFormat('en-GB', {
-                    timeZone: CONFIG.timeZone,
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                    hour12: false
-                }).formatToParts(now);
-                const pick = (t) => {
-                    const p = parts.find((x) => x.type === t);
-                    return p ? parseInt(p.value, 10) : 0;
-                };
-                return { hour: pick('hour'), minute: pick('minute'), second: pick('second') };
-            } catch (e) {
-                return { hour: now.getHours(), minute: now.getMinutes(), second: now.getSeconds() };
-            }
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = (window.innerWidth / 2 + (Math.random() - 0.5) * 300) + 'px';
+            p.style.top  = (window.innerHeight / 2 + (Math.random() - 0.5) * 300) + 'px';
+            p.style.setProperty('--tx', ((Math.random() - 0.5) * 200) + 'px');
+            p.style.setProperty('--ty', (-Math.random() * 150 - 50) + 'px');
+            document.getElementById('particles').appendChild(p);
+            setTimeout(function() { p.remove(); }, 15000);
         }
 
-        // 21:00 仪式触发（按上海时间）
-        function checkRitual() {
-            const now = new Date();
-            const { hour, minute, second } = getShanghaiClock(now);
-            if (hour === CONFIG.ritualHour && minute === 0 && second < 2) {
-                triggerRitual();
-            }
-        }
-        
+        // === 仪式 ===
         function triggerRitual() {
             const overlay = document.getElementById('ritualOverlay');
             const message = document.getElementById('ritualMessage');
-            if (!overlay || !message) {
-                return;
-            }
-
-            // 随机选择消息
-            const randomMessage = CONFIG.ritualMessages[Math.floor(Math.random() * CONFIG.ritualMessages.length)];
-            message.textContent = randomMessage;
-            
+            if (!overlay || !message) return;
+            message.textContent = CONFIG.ritualMessages[Math.floor(Math.random() * CONFIG.ritualMessages.length)];
             overlay.classList.add('active');
             message.classList.add('active');
-            
-            // 播放仪式声音
-            
-            // 生成适量粒子 - 更内敛
-            for (let i = 0; i < 20; i++) {
-                setTimeout(createParticle, i * 100);
-            }
-            
-            // 12秒后移除效果
-            setTimeout(() => {
+            for (let i = 0; i < 20; i++) setTimeout(createParticle, i * 100);
+            setTimeout(function() {
                 overlay.classList.remove('active');
                 message.classList.remove('active');
             }, 12000);
         }
-        
-        function showCompletionMessage() {
-            // 仅控制「S5 已结束」那一行；#residencyTagline 文案始终在 HTML 中固定，不随终态写入
-            const completion = document.getElementById('completionMessage');
-            if (completion) {
-                completion.style.display = 'block';
-            }
-        }
-        
-        // 倒计时主逻辑（起止时刻为上海墙钟，与用户本地时区无关，显示为绝对剩余时间）
-        function updateCountdown() {
-            const now = new Date();
-            const nowMs = now.getTime();
-            const tStart = CONFIG.startDate.getTime();
-            const tEnd = CONFIG.endDate.getTime();
-            const isOutsideCountdownWindow = now < CONFIG.startDate || now >= CONFIG.endDate;
 
-            const FLICKER_RADIUS_MS = 10000;
-            const inBoundaryFlicker =
-                Math.abs(nowMs - tStart) <= FLICKER_RADIUS_MS || Math.abs(nowMs - tEnd) <= FLICKER_RADIUS_MS;
-            if (inBoundaryFlicker) {
-                document.body.classList.add('countdown-flicker');
-                const oneSecond = 1000;
-                const useInactiveTheme = Math.floor(nowMs / oneSecond) % 2 === 0;
-                document.body.classList.toggle('countdown-inactive', useInactiveTheme);
+        // === 打字机 ===
+        let typewriterState = {
+            currentText: 'Spark it forward', fullText: 'Spark it forward',
+            isDeleting: false, isRotating: false, rotateIndex: 0, typewriterTimeout: null
+        };
+        const rotateWords = ['Stealth', 'Speed', 'Subtraction', 'Synergy'];
+        function updateTypewriterEffect() {
+            const el = document.getElementById('activity');
+            if (!el) return;
+            if (typewriterState.typewriterTimeout) clearTimeout(typewriterState.typewriterTimeout);
+            if (typewriterState.isRotating) {
+                if (typewriterState.rotateIndex < rotateWords.length) {
+                    el.textContent = rotateWords[typewriterState.rotateIndex++];
+                    typewriterState.typewriterTimeout = setTimeout(updateTypewriterEffect, 1500);
+                } else {
+                    typewriterState.isRotating = false; typewriterState.rotateIndex = 0; typewriterState.isDeleting = false;
+                    updateTypewriterEffect();
+                }
+            } else if (!typewriterState.isDeleting) {
+                el.textContent = typewriterState.currentText = typewriterState.fullText;
+                typewriterState.typewriterTimeout = setTimeout(function() { typewriterState.isDeleting = true; updateTypewriterEffect(); }, 2000);
             } else {
-                document.body.classList.remove('countdown-flicker');
-                document.body.classList.toggle('countdown-inactive', isOutsideCountdownWindow);
-            }
-
-            const remaining = CONFIG.endDate.getTime() - now.getTime();
-            const elapsed = now.getTime() - CONFIG.startDate.getTime();
-            const total = CONFIG.endDate.getTime() - CONFIG.startDate.getTime();
-            
-            if (remaining <= 0) {
-                if (!countdownFinished) {
-                    const ids = ['days-tens','days-ones','hours-tens','hours-ones','minutes-tens','minutes-ones','seconds-tens','seconds-ones'];
-                    ids.forEach(id => {
-                        const el = document.getElementById(id);
-                        if (el) el.textContent = '0';
-                    });
-                    document.getElementById('milliseconds').textContent = '.000';
-                    document.getElementById('progress').style.width = '100%';
-                    showCompletionMessage();
-                    countdownFinished = true;
-                }
-                if (countdownInterval && nowMs > tEnd + FLICKER_RADIUS_MS) {
-                    clearInterval(countdownInterval);
-                    countdownInterval = null;
-                }
-                return;
-            }
-            
-            // 时间感知的视觉增强
-            const hoursRemaining = remaining / (1000 * 60 * 60);
-            if (hoursRemaining <= 24) {
-                // 最后24小时增强效果
-                document.documentElement.style.setProperty('--glow-intensity', '0.8');
-                if (hoursRemaining <= 1) {
-                    // 最后1小时颜色变深
-                    document.documentElement.style.setProperty('--main-color', '#ff4520');
+                if (typewriterState.currentText.length > 5) {
+                    el.textContent = typewriterState.currentText = typewriterState.currentText.slice(0, -1);
+                    typewriterState.typewriterTimeout = setTimeout(updateTypewriterEffect, 80);
+                } else {
+                    typewriterState.isDeleting = false; typewriterState.isRotating = true; typewriterState.rotateIndex = 0;
+                    typewriterState.typewriterTimeout = setTimeout(updateTypewriterEffect, 1000);
                 }
             }
-            
-            // 计算剩余时间：天数、小时、分钟、秒数（42天周期）
-            const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((remaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-            const milliseconds = remaining % 1000;
-            
-            // 保存旧值
-            const oldValues = {
-                daysTens: document.getElementById('days-tens').textContent,
-                daysOnes: document.getElementById('days-ones').textContent,
-                hoursTens: document.getElementById('hours-tens').textContent,
-                hoursOnes: document.getElementById('hours-ones').textContent,
-                minutesTens: document.getElementById('minutes-tens').textContent,
-                minutesOnes: document.getElementById('minutes-ones').textContent,
-                secondsTens: document.getElementById('seconds-tens').textContent,
-                secondsOnes: document.getElementById('seconds-ones').textContent
-            };
-            
-            // 更新显示
-            const daysTens = Math.floor(days / 10);
-            const daysOnes = days % 10;
-            const hoursTens = Math.floor(hours / 10);
-            const hoursOnes = hours % 10;
-            const minutesTens = Math.floor(minutes / 10);
-            const minutesOnes = minutes % 10;
-            const secondsTens = Math.floor(seconds / 10);
-            const secondsOnes = seconds % 10;
-            
-            updateDigit('days-tens', daysTens, oldValues.daysTens);
-            updateDigit('days-ones', daysOnes, oldValues.daysOnes);
-            updateDigit('hours-tens', hoursTens, oldValues.hoursTens);
-            updateDigit('hours-ones', hoursOnes, oldValues.hoursOnes);
-            updateDigit('minutes-tens', minutesTens, oldValues.minutesTens);
-            updateDigit('minutes-ones', minutesOnes, oldValues.minutesOnes);
-            updateDigit('seconds-tens', secondsTens, oldValues.secondsTens);
-            updateDigit('seconds-ones', secondsOnes, oldValues.secondsOnes);
-            
-            // 更新毫秒（简化显示）
-            const displayMs = Math.floor(milliseconds / 10) * 10; // 显示10的倍数
-            document.getElementById('milliseconds').textContent = '.' + displayMs.toString().padStart(3, '0');
-            
-            // 更新进度条
-            const progress = total > 0 ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
-            document.getElementById('progress').style.width = progress + '%';
-            
-            // 整点特效 - 更克制
-            if (minutes === 0 && seconds === 0 && milliseconds < 100) {
-                for (let i = 0; i < 5; i++) {
-                    setTimeout(createParticle, i * 200);
-                }
-            }
-            
-            // 检查21:00仪式
-            checkRitual();
-        }
-        
-        // Community Dinner 进度条：每周一 18:30（上海时间）为周期锚点
-        function pad2(n) {
-            return String(n).padStart(2, '0');
         }
 
-        function getShanghaiYMDString(d) {
+        // === 生命体征 ===
+        function updateVitals() {
+            setEl('heartRate', 60 + Math.floor(Math.random() * 30));
+            const ce = document.getElementById('commits');
+            if (ce) {
+                if (Math.random() > 0.95) ce.textContent = (parseInt(ce.textContent, 10) || 0) + 1;
+                if (Math.random() > 0.8) { ce.classList.add('glitching'); setTimeout(function() { ce.classList.remove('glitching'); }, 300); }
+            }
+        }
+
+        // === Ship it Monday 进度（纯 UTC+8 算术）===
+        function getMonday1830UTC(now) {
+            const todayMidSh = Math.floor((now + 8 * 3600000) / MS_PER_DAY) * MS_PER_DAY - 8 * 3600000;
+            const dow = new Date(todayMidSh + 8 * 3600000).getUTCDay(); // 0=Sun
+            const daysSinceMon = (dow + 6) % 7;
+            return todayMidSh - daysSinceMon * MS_PER_DAY + (18 * 60 + 30) * 60000;
+        }
+
+        function updateShipItMonday() {
             try {
-                const part = d.toLocaleString('sv-SE', { timeZone: CONFIG.timeZone }).split(' ')[0];
-                if (part && /^\d{4}-\d{1,2}-\d{1,2}$/.test(part)) {
-                    return part;
+                const now = Date.now();
+                let wStart = getMonday1830UTC(now);
+                if (now < wStart) wStart -= 7 * MS_PER_DAY;
+                const wEnd = wStart + 7 * MS_PER_DAY;
+                const pct = Math.min(100, Math.max(0, (now - wStart) / (7 * MS_PER_DAY) * 100));
+                const rem = Math.max(0, wEnd - now);
+                const pb = document.getElementById('communityDinnerProgress');
+                const pm = document.getElementById('communityDinnerMarker');
+                const de = document.getElementById('communityDinnerDate');
+                const ce = document.getElementById('communityDinnerCountdown');
+                const cont = pb ? pb.parentElement : null;
+                if (pb) pb.style.width = pct + '%';
+                if (pm && cont) pm.style.left = (cont.offsetWidth * pct / 100) + 'px';
+                if (de) {
+                    const sp = getShanghaiParts(wEnd);
+                    const mo = ['Jan.','Feb.','Mar.','Apr.','May','Jun.','Jul.','Aug.','Sep.','Oct.','Nov.','Dec.'];
+                    de.textContent = mo[sp.month - 1] + ' ' + sp.day;
                 }
-            } catch (e) { /* Intl 时区不可用时回退本机 */ }
-            return d.toLocaleString('sv-SE').split(' ')[0];
+                if (ce) {
+                    const d = Math.floor(rem / MS_PER_DAY);
+                    const h = Math.floor((rem % MS_PER_DAY) / 3600000);
+                    const m = Math.floor((rem % 3600000) / 60000);
+                    const s = Math.floor((rem % 60000) / 1000);
+                    ce.textContent = d > 0 ? d + 'd ' + pad2(h) + ':' + pad2(m) + ':' + pad2(s) : pad2(h) + ':' + pad2(m) + ':' + pad2(s);
+                }
+            } catch (e) {}
         }
 
-        function getShanghaiLocalDateTime(y, m, d, h, min, s) {
-            return new Date(`${y}-${pad2(m)}-${pad2(d)}T${pad2(h)}:${pad2(min)}:${pad2(s)}+08:00`);
-        }
-
-        function getShanghaiShortWeekdayKey(d) {
+        // === 主倒计时：直接同步更新 DOM，全局 try-catch ===
+        function updateCountdown() {
             try {
-                return d.toLocaleDateString('en-US', { timeZone: CONFIG.timeZone, weekday: 'short' });
+                const now = Date.now();
+                const remaining = END_TS - now;
+                const elapsed   = now - START_TS;
+                const total     = END_TS - START_TS;
+                const isOutside = now < START_TS || now >= END_TS;
+                const FLICKER   = 10000;
+                const inFlicker = Math.abs(now - START_TS) <= FLICKER || Math.abs(now - END_TS) <= FLICKER;
+
+                if (inFlicker) {
+                    document.body.classList.add('countdown-flicker');
+                    document.body.classList.toggle('countdown-inactive', Math.floor(now / 1000) % 2 === 0);
+                } else {
+                    document.body.classList.remove('countdown-flicker');
+                    document.body.classList.toggle('countdown-inactive', isOutside);
+                }
+
+                if (remaining <= 0) {
+                    if (!countdownFinished) {
+                        ['days-tens','days-ones','hours-tens','hours-ones',
+                         'minutes-tens','minutes-ones','seconds-tens','seconds-ones'].forEach(function(id) { setEl(id, '0'); });
+                        setEl('milliseconds', '.000');
+                        const prog = document.getElementById('progress');
+                        if (prog) prog.style.width = '100%';
+                        const comp = document.getElementById('completionMessage');
+                        if (comp) comp.style.display = 'block';
+                        countdownFinished = true;
+                    }
+                    return;
+                }
+
+                const hoursLeft = remaining / 3600000;
+                if (hoursLeft <= 24) {
+                    document.documentElement.style.setProperty('--glow-intensity', '0.8');
+                    if (hoursLeft <= 1) document.documentElement.style.setProperty('--main-color', '#ff4520');
+                }
+
+                const days    = Math.floor(remaining / MS_PER_DAY);
+                const hours   = Math.floor((remaining % MS_PER_DAY) / 3600000);
+                const minutes = Math.floor((remaining % 3600000) / 60000);
+                const seconds = Math.floor((remaining % 60000) / 1000);
+                const millis  = remaining % 1000;
+
+                // 直接同步更新，无 setTimeout 延迟，无类型比较问题
+                setEl('days-tens',    Math.floor(days / 10));
+                setEl('days-ones',    days % 10);
+                setEl('hours-tens',   Math.floor(hours / 10));
+                setEl('hours-ones',   hours % 10);
+                setEl('minutes-tens', Math.floor(minutes / 10));
+                setEl('minutes-ones', minutes % 10);
+                setEl('seconds-tens', Math.floor(seconds / 10));
+                setEl('seconds-ones', seconds % 10);
+                setEl('milliseconds', '.' + pad3(Math.floor(millis / 10) * 10));
+
+                const pct = total > 0 ? Math.min(100, Math.max(0, elapsed / total * 100)) : 0;
+                const progEl = document.getElementById('progress');
+                if (progEl) progEl.style.width = pct + '%';
+
+                if (minutes === 0 && seconds === 0 && millis < 200) {
+                    for (let i = 0; i < 5; i++) setTimeout(createParticle, i * 200);
+                }
+
+                const sp = getShanghaiParts(now);
+                if (sp.hour === CONFIG.ritualHour && sp.minute === 0 && sp.second < 2) triggerRitual();
+
             } catch (e) {
-                return d.toLocaleDateString('en-US', { weekday: 'short' });
+                // 任何错误都不能杀死倒计时循环
             }
         }
 
-        function getCurrentWeekStart() {
-            const now = new Date();
-            const ymd = getShanghaiYMDString(now).split('-').map((x) => parseInt(x, 10));
-            const y = ymd[0];
-            const m = ymd[1];
-            const d = ymd[2];
-            const dayStart = getShanghaiLocalDateTime(y, m, d, 0, 0, 0);
-            const wk = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 }[getShanghaiShortWeekdayKey(now)] ?? 0;
-            const daysBack = (wk + 6) % 7;
-            const thisMonday0 = new Date(dayStart.getTime() - daysBack * MS_PER_DAY);
-            const thisWeekDinner = new Date(thisMonday0.getTime() + (18 * 60 + 30) * 60 * 1000);
-            if (now < thisWeekDinner) {
-                return new Date(thisWeekDinner.getTime() - 7 * MS_PER_DAY);
-            }
-            return thisWeekDinner;
-        }
-
-        function getNextWeekStart() {
-            return new Date(getCurrentWeekStart().getTime() + 7 * MS_PER_DAY);
-        }
-
-        function formatDate(date) {
-            const months = ['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'];
-            const ymd = getShanghaiYMDString(date).split('-').map((x) => parseInt(x, 10));
-            return `${months[ymd[1] - 1]} ${ymd[2]}`;
-        }
-
-        function formatShipItCountdown(remainingMs) {
-            if (remainingMs <= 0) {
-                return '00:00:00';
-            }
-            const d = Math.floor(remainingMs / 86400000);
-            const h = Math.floor((remainingMs % 86400000) / 3600000);
-            const m = Math.floor((remainingMs % 3600000) / 60000);
-            const s = Math.floor((remainingMs % 60000) / 1000);
-            if (d > 0) {
-                return `${d}d ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            }
-            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-        }
-
-        function updateCommunityDinnerProgress() {
-            const progressBar = document.getElementById('communityDinnerProgress');
-            const progressMarker = document.getElementById('communityDinnerMarker');
-            const dateElement = document.getElementById('communityDinnerDate');
-            const countdownElement = document.getElementById('communityDinnerCountdown');
-            const container = progressBar ? progressBar.parentElement : null;
-            if (!container) {
-                return;
-            }
-
-            const now = new Date();
-            const weekStart = getCurrentWeekStart();
-            const weekEnd = getNextWeekStart();
-            const total = weekEnd.getTime() - weekStart.getTime();
-            const elapsed = now.getTime() - weekStart.getTime();
-            const pct = total > 0 ? Math.min(100, Math.max(0, (elapsed / total) * 100)) : 0;
-            const remaining = weekEnd.getTime() - now.getTime();
-
-            if (progressBar) {
-                progressBar.style.width = pct + '%';
-            }
-
-            if (progressMarker) {
-                const containerWidth = container.offsetWidth;
-                progressMarker.style.left = (containerWidth * pct) / 100 + 'px';
-            }
-
-            if (dateElement) {
-                dateElement.textContent = formatDate(weekEnd);
-            }
-
-            if (countdownElement) {
-                countdownElement.textContent = formatShipItCountdown(remaining);
-            }
-        }
-        
-        function scheduleWeeklyRefresh() {
-            const now = new Date();
-            const nextMonday = getNextWeekStart();
-            const msUntilRefresh = nextMonday.getTime() - now.getTime();
-            
-            // 设置定时器在下一个周一18:30刷新
-            setTimeout(() => {
-                updateCommunityDinnerProgress();
-                // 之后每7天刷新一次
-                setInterval(updateCommunityDinnerProgress, 7 * 24 * 60 * 60 * 1000);
-            }, msUntilRefresh);
-        }
-        
-        
-        
-        // 窗口调整
-        window.addEventListener('resize', () => {
+        // === 窗口缩放 ===
+        window.addEventListener('resize', function() {
             const canvas = document.getElementById('matrix-bg');
-            if (canvas) {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            }
+            if (canvas) { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
         });
-        
-        // 初始化
+
+        // === 启动 ===
         initMatrix();
         updateWaveform();
         setInterval(createParticle, CONFIG.particleInterval);
-        countdownInterval = setInterval(updateCountdown, 10);
+        setInterval(updateCountdown, 100);
         setInterval(updateVitals, 3000);
-        
-        // Community Dinner 进度条初始化
-        updateCommunityDinnerProgress();
-        setInterval(updateCommunityDinnerProgress, 1000); // 每秒更新一次进度
-        scheduleWeeklyRefresh(); // 设置每周一18:30自动刷新
-        
-        // 启动打字机效果
+        setInterval(updateShipItMonday, 1000);
+        updateShipItMonday();
         updateTypewriterEffect();
-        
-        // 立即执行一次
         updateCountdown();
-        
-        // 键盘快捷键
-        document.addEventListener('keydown', (e) => {
-            // 按空格键触发仪式（测试用）
-            if (e.code === 'Space') {
-                e.preventDefault();
-                triggerRitual();
-            }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') { e.preventDefault(); triggerRitual(); }
         });
     </script>
 </body>
